@@ -16,12 +16,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *     collectionOperations={"get", "post"},
  *     itemOperations={
  *          "get"={
  *              "normalization_context"={"groups"={"cheese_listing:read", "cheese_listing:item:get"}},
  *          },
- *          "put"
+ *          "put"={
+ *                 "access_control"="is_granted('ROLE_USER') and previous_object.getOwner() == user",
+ *                 "access_control_message"="Only the creator can edit a cheese listing"
+ *                },
+ *          "delete"={"access_control"="is_granted('ROLE_ADIMIN')"}
+ *
+ *     },
+ *     collectionOperations={
+ *         "get",
+ *        "post"={"access_control"="is_granted('ROLE_USER')"}
  *     },
  *     shortName="cheeses",
  *     normalizationContext={"groups"={"cheese_listing:read"}, "swagger_definition_name"="Read"},
@@ -42,6 +50,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiFilter(PropertyFilter::class)
  * @ORM\Entity(repositoryClass="App\Repository\CheeseListingRepository")
  */
+
 class CheeseListing
 {
     /**
