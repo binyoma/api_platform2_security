@@ -2,7 +2,7 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.4.33, <8.0",
+        "php": "^7.4, <8.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/core": "^2.1",
