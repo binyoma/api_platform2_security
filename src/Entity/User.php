@@ -79,7 +79,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Groups({"user:read", "user:write", "cheese:item:get", "cheese:write"})
+     * @Groups({"user:read", "user:write", "cheese:item:get"})
      * @Assert\NotBlank()
      */
     private $username;
@@ -93,7 +93,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Groups({"admin:read", "user:write"})
+     * @Groups({"admin:read","owner:read", "user:write"})
      */
     private $phoneNumber;
 

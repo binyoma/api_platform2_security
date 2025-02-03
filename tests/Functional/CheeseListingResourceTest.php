@@ -19,14 +19,31 @@ class CheeseListingResourceTest extends CustomApiTestCase
         ]);
         $this->assertResponseStatusCodeSame(401);
 
-        $this->createUser('cheeseplease@example.com','foo');
 
-        $this->CreateUserAndLogIn($client,'cheeseplease1@example.com','foo');
+        $authenticateUser = $this->CreateUserAndLogIn($client,'cheeseplease@example.com','foo');
+        $otherUser = $this->createUser('otheruser@example.com','foo');
+
+        $cheesyData = [
+            'title' => 'Mystery cheese... kinda green',
+            'description' => 'What mysteries does it hold?',
+            'price' => 5000
+        ];
 
         $client->request('POST', '/api/cheeses', [
-            'json'=>[]
+            'json'=>$cheesyData
         ]);
-        $this->assertResponseStatusCodeSame(400);
+        $this->assertResponseStatusCodeSame(201);
+
+
+        $client->request('POST', '/api/cheeses', [
+            'json' => $cheesyData + ['owner' => '/api/users/'.$otherUser->getId()],
+        ]);
+        $this->assertResponseStatusCodeSame(400, 'not passing the correct owner');
+
+        $client->request('POST', '/api/cheeses', [
+            'json' => $cheesyData + ['owner' => '/api/users/'.$authenticateUser->getId()],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
 
     }
     public function testUpdateCheeseListing()
